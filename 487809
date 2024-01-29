@@ -1,0 +1,109 @@
+# def showInfo():
+#     age = 10
+#     name = "Yurii"
+#     print(f"Name: {name}, Age: {age}")
+
+# def showInformation():
+#     global surname
+#     global livingcity
+#     surname = "Shuve"
+#     livingcity = "Lviv"
+#     print(surname, livingcity)
+
+# surname = "Muller"
+# livingcity = "Rivne"
+# print(surname, livingcity)
+# showInformation()
+# print(surname, livingcity)
+
+from tkinter import *
+from tkinter import ttk
+
+bomb = 100
+score = 0
+press_return = True
+best_score = 0
+
+def start(event):
+    global press_return
+    global bomb
+    global score
+    if not press_return:
+        pass
+    else:
+        bomb = 100
+        score = 0
+        label.config(text="")
+        update_dis()
+        update_point()
+        update_bomb()
+        press_return = False
+
+def update_dis():
+    global score
+    global bomb
+    if bomb > 50:
+        bomb_label.config(image=normal_photo)
+    elif 0<bomb<50:
+        bomb_label.config(image=no_photo)
+    else:
+        bomb_label.config(image=bang_photo)
+    fuse_label.config(text="Fuse = "+str(bomb))
+    score_label.config(text="Score = "+str(score))
+    fuse_label.after(100, update_dis)
+
+def update_bomb():
+    global bomb
+    bomb-=5
+    if is_alive():
+        fuse_label.after(400, update_bomb)
+
+def update_point():
+    global score
+    score+=1
+    if is_alive():
+        score_label.after(3000, update_point)
+def click():
+    global bomb
+    if is_alive():
+        bomb+=1
+
+def is_alive():
+    global bomb
+    global press_return
+    if bomb <=0:
+        label.config(text="BANG! BANG! BANG!")
+        press_return = True
+        with open("scorebest.txt", "r")
+            
+        return False
+    else:
+        return True
+
+root = Tk()
+root.title("Boom")
+root.geometry("600x600")
+root["background"]= "#faf1e3"
+
+label = Label(root, text="Press [Enter] to start the game", font = ('Comic Sans MS', 12), bg="#e3d7c5")
+label.pack()
+
+fuse_label = Label(root, text="Fuse: " + str(bomb), font=('Comic Sans MS', 14), bg="#e3d7c5")
+fuse_label.pack()
+
+score_label = Label(root, text="Score: " + str(score), font=('Comic Sans MS', 14), bg="#e3d7c5")
+score_label.pack()
+
+no_photo = PhotoImage(file="bomb_no.gif")
+normal_photo = PhotoImage(file="bomb_normal.gif")
+bang_photo = PhotoImage(file="pow.gif")
+
+bomb_label = Label(root, image=normal_photo)
+bomb_label.pack()
+
+click_button = Button(root, text="Click me", font=('Comic Sans MS', 14), bg="#e3d7c5", fg="black", command=click, width=15)
+click_button.pack()
+
+root.bind('<Return>', start)
+
+root.mainloop()
